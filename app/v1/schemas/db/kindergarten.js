@@ -126,6 +126,10 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.DOUBLE,
             allowNull: true,
         },
+        gps_status: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+        },
     }, {
         tableName: 'kindergarten',
         freezeTableName: true,

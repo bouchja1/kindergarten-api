@@ -7,4 +7,5 @@ module.exports = {
     db_password: process.env.DB_PASSWORD,
     PORT: 3001,
     SERVER_TIMEZONE: process.env.SERVER_TIMEZONE,
+    API_KEY: process.env.API_KEY,
 };
