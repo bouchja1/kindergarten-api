@@ -6,12 +6,12 @@ cache:
   - node_modules
 addons:
   ssh_known_hosts: 185.8.165.64
-before_install:
-- openssl aes-256-cbc -K $encrypted_0a6446eb3ae3_key -iv $encrypted_0a6446eb3ae3_iv -in deploy_rsa.enc -out deploy_rsa.enc -d
-
 deploy:
   provider: script
   skip_cleanup: true
   script: rsync -r --delete-after --delete --quiet $TRAVIS_BUILD_DIR bouchja1@185.8.165.64:/home/bouchja1/projects/kindergarten/kindergartenRestApi
   on:
     branch: master
+before_install:
+- openssl aes-256-cbc -K $encrypted_0e37d283556b_key -iv $encrypted_0e37d283556b_iv
+  -in deploy_rsa.enc -out deploy_rsa -d
