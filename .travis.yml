@@ -9,7 +9,7 @@ addons:
 deploy:
   provider: script
   skip_cleanup: true
-  script: rsync -r --delete-after --delete --quiet $TRAVIS_BUILD_DIR bouchja1@185.8.165.64:/home/bouchja1/projects/kindergarten/kindergartenRestApi
+  script: rsync -r --delete-after --delete --quiet $TRAVIS_BUILD_DIR bouchja1@185.8.165.64:/opt/kindergarten/kindergartenRestApi
   on:
     branch: master
 before_install:
