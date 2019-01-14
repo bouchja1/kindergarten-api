@@ -43,6 +43,10 @@ class KindergartenService {
         this._model = null;
     }
 
+    getAllGpsCoordinates(requestData) {
+        return this._model.getAllGpsCoordinates(requestData.year);
+    }
+
     getAllKindergartens() {
         return this._model.getAllKindergartens();
     }

@@ -12,6 +12,7 @@ basicRouter
         ctx.body = { latest_version: 'v1' };
         next();
     })
+    .get('/coordinates', Kindergarten.getAllGpsCoordinates, render)
     .get('/kindergartens', Kindergarten.getAllKindergartens, render)
     .get('/kindergartens/:kindergartenId', Kindergarten.getKindergartenDetail, render);
 

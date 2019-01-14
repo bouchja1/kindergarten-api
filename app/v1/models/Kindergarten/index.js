@@ -1,5 +1,7 @@
 'use strict';
 
+const sequelize = require('sequelize');
+
 class KindergartenModel {
 
     /**
@@ -17,6 +19,21 @@ class KindergartenModel {
 
     async getAllKindergartens() {
         return await this._kindergartenSchema.findAll();
+    }
+
+    async getAllGpsCoordinates(year) {
+        return this._db.query(
+            `
+            SELECT id, latitude, longitude
+            FROM kindergarten
+            WHERE year = $year
+            `, {
+                type: sequelize.QueryTypes.SELECT,
+                bind: {
+                    year,
+                },
+            }
+        )
     }
 }
 
