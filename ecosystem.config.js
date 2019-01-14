@@ -6,10 +6,9 @@ module.exports = {
     }],
     deploy: {
         // "production" is the environment name
-        /*
         productionLocal: {
             // SSH key path, default to $HOME/.ssh
-            key: "~/.ssh/travis_pm2_rsa",
+            key: "/Users/honza/.ssh/travis_pm2_rsa",
             // SSH user
             user: "travis",
             // SSH host
@@ -34,10 +33,9 @@ module.exports = {
             // post-deploy action
             "post-deploy": "npm install && pm2 startOrRestart ecosystem.config.js"
         },
-        */
         production: {
             // SSH key path, default to $HOME/.ssh
-            key: "/home/travis/.ssh/travis_pm2_rsa",
+            key: "/tmp/travis_pm2_rsa",
             // SSH user
             user: "travis",
             // SSH host
