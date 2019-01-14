@@ -8,7 +8,7 @@ module.exports = {
         // "production" is the environment name
         productionLocal: {
             // SSH key path, default to $HOME/.ssh
-            key: "/Users/honza/.ssh/travis_pm2_rsa",
+            key: "~/.ssh/travis_pm2_rsa",
             // SSH user
             user: "travis",
             // SSH host
@@ -55,7 +55,7 @@ module.exports = {
             // eg: placing configurations in the shared dir etc
             "post-setup": "ls -la",
             // pre-deploy action
-            "pre-deploy":"git pull",
+            "pre-deploy":"git fetch --all",
             "pre-deploy-local": "echo 'This is a local executed command'",
             // post-deploy action
             "post-deploy": "npm install && pm2 startOrRestart ecosystem.config.js"
