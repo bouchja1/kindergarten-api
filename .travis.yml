@@ -9,7 +9,7 @@ addons:
 deploy:
   provider: script
   skip_cleanup: true
-  script: rsync -r --delete-after --delete --quiet $TRAVIS_BUILD_DIR travis@185.8.165.64:/home/travis/projects/kindergartenRestApi
+  script: rsync -r --delete-after --delete --quiet $TRAVIS_BUILD_DIR travis@185.8.165.64:/home/travis/projects
   on:
     branch: master
 before_install: # setup the RSA key for use in Dokku Deployment:
