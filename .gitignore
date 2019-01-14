@@ -4,6 +4,9 @@
 /nbproject/
 /tmp
 
+deploy_rsa
+deploy_rsa.pub
+
 # Mac OS files
 **/.DS_Store
 
