@@ -8,7 +8,7 @@ module.exports = {
         // "production" is the environment name
         production: {
             // SSH key path, default to $HOME/.ssh
-            key: "~/.ssh/pm2_deploy_key",
+            key: "~/.ssh/travis_pm2_rsa",
             // SSH user
             user: "travis",
             // SSH host

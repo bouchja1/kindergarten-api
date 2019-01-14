@@ -6,6 +6,8 @@
 
 deploy_rsa
 deploy_rsa.pub
+travis_deploy_rsa
+travis_deploy_rsa.pub
 
 # Mac OS files
 **/.DS_Store
