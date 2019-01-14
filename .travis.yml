@@ -6,12 +6,6 @@ cache:
   - node_modules
 addons:
   ssh_known_hosts: 185.8.165.64
-deploy:
-  provider: script
-  skip_cleanup: true
-  script: rsync -r --delete-after --delete --quiet $TRAVIS_BUILD_DIR travis@185.8.165.64:/home/travis/projects
-  on:
-    branch: master
 before_install:
 - openssl aes-256-cbc -K $encrypted_0e37d283556b_key -iv $encrypted_0e37d283556b_iv
   -in deploy_rsa.enc -out /tmp/deploy_rsa -d
