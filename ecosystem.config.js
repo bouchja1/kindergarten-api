@@ -4,7 +4,11 @@ module.exports = {
         name: "kindergarten-api",
         //cwd: "/home/travis/projects/kindergarten-api/current/",
         //script: "/home/travis/projects/kindergarten-api/current/app/index.js"
-        script: "app/index.js"
+        script: "app/index.js",
+        error_file : "logs/err.log",
+        out_file: "logs/out.log",
+        merge_logs: true,
+        log_date_format: "YYYY-MM-DD HH:mm Z"
     }],
     deploy: {
         // "production" is the environment name
@@ -33,7 +37,7 @@ module.exports = {
             "pre-deploy":"git pull",
             "pre-deploy-local": "echo 'This is a local executed command'",
             // post-deploy action
-            "post-deploy": "mkdir -p logs && touch logs/all-logs.log && npm install && pm2 startOrRestart ecosystem.config.js --log logs/all-logs.log"
+            "post-deploy": "mkdir -p logs && touch logs/err.log && touch logs/out.log && npm install && pm2 startOrRestart ecosystem.config.js"
         },
         production: {
             // SSH key path, default to $HOME/.ssh
@@ -60,7 +64,7 @@ module.exports = {
             "pre-deploy":"git fetch --all",
             "pre-deploy-local": "echo 'This is a local executed command'",
             // post-deploy action
-            "post-deploy": "mkdir -p logs && touch logs/all-logs.log && npm install && pm2 startOrRestart ecosystem.config.js --log logs/all-logs.log"
+            "post-deploy": "mkdir -p logs && touch logs/err.log && touch logs/out.log && npm install && pm2 startOrRestart ecosystem.config.js"
         },
     }
 }
