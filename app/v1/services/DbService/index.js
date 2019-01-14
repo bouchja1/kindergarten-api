@@ -4,7 +4,6 @@ const SimpleInjector = require('../../libs/simple-injector');
 const _ = require('lodash');
 const path = require('path');
 const fs = require('fs');
-const sha1 = require('sha1');
 
 let instance = null;
 
@@ -125,16 +124,6 @@ class DBService {
      */
     _removeExtFromFileName(fileName) {
         return fileName.replace(/\.js/, '');
-    }
-
-
-    _hashPasswords(data) {
-        return data.map((user) => {
-            if (user.password !== '') {
-                user.password = sha1(user.password);
-            }
-            return user
-        });
     }
 
 }
