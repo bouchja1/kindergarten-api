@@ -6,9 +6,6 @@ cache:
   - node_modules
 addons:
   ssh_known_hosts: 185.8.165.64
-deploy:
-  provider: script
-  script: ssh travis@185.8.165.64 "echo 'AHOJ'; ls -la"
 before_install:
 - openssl aes-256-cbc -K $encrypted_0e37d283556b_key -iv $encrypted_0e37d283556b_iv
   -in travis_pm2_rsa.enc -out /tmp/travis_pm2_rsa -d
@@ -18,5 +15,5 @@ before_install:
 - ssh-add /tmp/travis_pm2_rsa
 after_success:
 - npm install pm2 -g
-- pm2 deploy ecosystem.config.js production setup
+- pm2 deploy ecosystem.config.js production update
 - pm2 deploy ecosystem.config.js production exec "pm2 reload all"

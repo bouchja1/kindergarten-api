@@ -2,6 +2,8 @@
 module.exports = {
     apps: [{
         name: "kindergarten-api",
+        //cwd: "/home/travis/projects/kindergarten-api/current/",
+        //script: "/home/travis/projects/kindergarten-api/current/app/index.js"
         script: "app/index.js"
     }],
     deploy: {
@@ -19,7 +21,7 @@ module.exports = {
             // GIT remote/branch
             ref: "origin/master",
             // GIT remote
-            repo: "git@github.com:bouchja1/kindergarten-api.git",
+            repo: "https://github.com/bouchja1/kindergarten-api.git",
             // path in the server
             path: "/home/travis/projects/kindergarten-api",
             // Pre-setup command or path to a script on your local machine
@@ -46,7 +48,7 @@ module.exports = {
             // GIT remote/branch
             ref: "origin/master",
             // GIT remote
-            repo: "git@github.com:bouchja1/kindergarten-api.git",
+            repo: "https://github.com/bouchja1/kindergarten-api.git",
             // path in the server
             path: "/home/travis/projects/kindergarten-api",
             // Pre-setup command or path to a script on your local machine
