@@ -61,7 +61,7 @@ module.exports = {
             // eg: placing configurations in the shared dir etc
             "post-setup": "ls -la",
             // pre-deploy action
-            "pre-deploy":"git fetch --all",
+            "pre-deploy":"git pull",
             "pre-deploy-local": "echo 'This is a local executed command'",
             // post-deploy action
             "post-deploy": "mkdir -p logs && touch logs/err.log && touch logs/out.log && npm install && pm2 startOrRestart ecosystem.config.js"
