@@ -33,7 +33,7 @@ module.exports = {
             "pre-deploy":"git pull",
             "pre-deploy-local": "echo 'This is a local executed command'",
             // post-deploy action
-            "post-deploy": "npm install && pm2 startOrRestart ecosystem.config.js"
+            "post-deploy": "mkdir -p logs && touch logs/all-logs.log && npm install && pm2 startOrRestart ecosystem.config.js --log logs/all-logs.log"
         },
         production: {
             // SSH key path, default to $HOME/.ssh
@@ -60,7 +60,7 @@ module.exports = {
             "pre-deploy":"git fetch --all",
             "pre-deploy-local": "echo 'This is a local executed command'",
             // post-deploy action
-            "post-deploy": "npm install && pm2 startOrRestart ecosystem.config.js"
+            "post-deploy": "mkdir -p logs && touch logs/all-logs.log && npm install && pm2 startOrRestart ecosystem.config.js --log logs/all-logs.log"
         },
     }
 }
