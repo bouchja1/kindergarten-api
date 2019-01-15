@@ -21,6 +21,17 @@ class KindergartenModel {
         return await this._kindergartenSchema.findAll();
     }
 
+    async getAllRegions() {
+        return this._db.query(
+            `
+            SELECT DISTINCT nvusc
+            FROM kindergarten
+            `, {
+                type: sequelize.QueryTypes.SELECT,
+            }
+        )
+    }
+
     async getAllGpsCoordinates(year) {
         return this._db.query(
             `

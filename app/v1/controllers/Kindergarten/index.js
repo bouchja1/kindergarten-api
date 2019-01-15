@@ -7,6 +7,14 @@ const validator = require('../../libs/validator');
 
 class Kindergartens {
 
+    static async getAllRegions(ctx, next) {
+        const allRegions = await kindergartenService.getAllRegions();
+        ctx.body = {
+            regions: allRegions,
+        };
+        await next();
+    }
+
     static async getAllGpsCoordinates(ctx, next) {
         const result = validator.run(ctx, validator.QUERY, {
             year: validator.number().default(2017)
