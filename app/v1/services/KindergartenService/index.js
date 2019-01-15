@@ -48,7 +48,7 @@ class KindergartenService {
     }
 
     getAllGpsCoordinates(requestData) {
-        return this._model.getAllGpsCoordinates(requestData.year);
+        return this._model.getAllGpsCoordinates(requestData.year, requestData.regionName);
     }
 
     getAllKindergartens() {

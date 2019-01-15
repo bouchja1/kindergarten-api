@@ -24,7 +24,7 @@ class KindergartenModel {
     async getAllRegions() {
         return this._db.query(
             `
-            SELECT DISTINCT nvusc
+            SELECT DISTINCT nvusc, vusc
             FROM kindergarten
             `, {
                 type: sequelize.QueryTypes.SELECT,
@@ -32,16 +32,17 @@ class KindergartenModel {
         )
     }
 
-    async getAllGpsCoordinates(year) {
+    async getAllGpsCoordinates(year, regionName) {
         return this._db.query(
             `
             SELECT id, latitude, longitude
             FROM kindergarten
-            WHERE year = $year
+            WHERE year = $year AND nvusc = $regionName
             `, {
                 type: sequelize.QueryTypes.SELECT,
                 bind: {
                     year,
+                    regionName,
                 },
             }
         )
