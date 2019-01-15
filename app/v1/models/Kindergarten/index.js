@@ -24,7 +24,7 @@ class KindergartenModel {
     async getAllRegions() {
         return this._db.query(
             `
-            SELECT DISTINCT nvusc, vusc
+            SELECT DISTINCT nvusc
             FROM kindergarten
             `, {
                 type: sequelize.QueryTypes.SELECT,
