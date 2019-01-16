@@ -21,11 +21,14 @@ class KindergartenModel {
         return await this._kindergartenSchema.findAll();
     }
 
-    async getAllRegions() {
+    async getAllRegionsWithTerritories() {
         return this._db.query(
             `
-            SELECT DISTINCT nvusc
-            FROM kindergarten
+                SELECT * FROM territorial_unit unit
+                INNER JOIN (SELECT kindergarten.nvusc, kindergarten.vusc, region.latitude, region.longitude FROM kindergarten kindergarten
+                JOIN region region ON region.name = kindergarten.nvusc 
+                GROUP BY nvusc, vusc, latitude, longitude) regions_with_territories
+                ON unit.id = regions_with_territories.vusc
             `, {
                 type: sequelize.QueryTypes.SELECT,
             }

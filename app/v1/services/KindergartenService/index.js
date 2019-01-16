@@ -43,19 +43,48 @@ class KindergartenService {
         this._model = null;
     }
 
-    getAllRegions() {
-        return this._model.getAllRegions();
+    async getAllRegions() {
+        const regionsMap = new Map();
+        const regionsWithTerritories = await this._model.getAllRegionsWithTerritories();
+        for (let i = 0; i < regionsWithTerritories.length; i++) {
+            const nvuscRegion = regionsMap.get(regionsWithTerritories[i].nvusc);
+            if (nvuscRegion) {
+                nvuscRegion.territories.push({
+                    name: regionsWithTerritories[i].name,
+                    vusc: regionsWithTerritories[i].vusc,
+                });
+            } else {
+                regionsMap.set(regionsWithTerritories[i].nvusc, {
+                    nvusc: regionsWithTerritories[i].nvusc,
+                    latitude: regionsWithTerritories[i].latitude,
+                    longitude: regionsWithTerritories[i].longitude,
+                    territories: [
+                        {
+                            name: regionsWithTerritories[i].name,
+                            vusc: regionsWithTerritories[i].vusc,
+                        }
+                    ]
+                })
+            }
+        }
+        // get values
+        const regionsTerritoriesArray = [];
+        for (let value of regionsMap.values()) {
+            regionsTerritoriesArray.push(value);
+        }
+
+        return regionsTerritoriesArray;
     }
 
-    getAllGpsCoordinates(requestData) {
+    async getAllGpsCoordinates(requestData) {
         return this._model.getAllGpsCoordinates(requestData.year, requestData.regionName);
     }
 
-    getAllKindergartens() {
+    async getAllKindergartens() {
         return this._model.getAllKindergartens();
     }
 
-    getKindergartenDetail(id) {
+    async getKindergartenDetail(id) {
         return this._model.getKindergartenById(id);
     }
 
