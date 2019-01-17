@@ -35,17 +35,18 @@ class KindergartenModel {
         )
     }
 
-    async getAllGpsCoordinates(year, regionName) {
+    async getAllGpsCoordinates(year, vusc, nvusc) {
         return this._db.query(
             `
             SELECT id, latitude, longitude
             FROM kindergarten
-            WHERE year = $year AND nvusc = $regionName
+            WHERE year = $year AND nvusc = $nvusc AND vusc = $vusc
             `, {
                 type: sequelize.QueryTypes.SELECT,
                 bind: {
                     year,
-                    regionName,
+                    nvusc,
+                    vusc,
                 },
             }
         )

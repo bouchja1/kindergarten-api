@@ -77,7 +77,7 @@ class KindergartenService {
     }
 
     async getAllGpsCoordinates(requestData) {
-        return this._model.getAllGpsCoordinates(requestData.year, requestData.regionName);
+        return this._model.getAllGpsCoordinates(requestData.year, requestData.vusc, requestData.nvusc);
     }
 
     async getAllKindergartens() {

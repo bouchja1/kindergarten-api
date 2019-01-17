@@ -18,7 +18,8 @@ class Kindergartens {
     static async getAllGpsCoordinates(ctx, next) {
         const result = validator.run(ctx, validator.QUERY, {
             year: validator.number().default(2017),
-            regionName: validator.string().valid(['Hl. m. Praha','Středočeský kraj','Jihočeský kraj','Plzeňský kraj','Karlovarský kraj','Ústecký kraj','Liberecký kraj','Královéhradecký kraj','Pardubický kraj','Kraj Vysočina','Jihomoravský kraj','Olomoucký kraj','Zlínský kraj','Moravskoslezský kraj']).required(),
+            vusc: validator.string().required(),
+            nvusc: validator.string().valid(['Hl. m. Praha','Středočeský kraj','Jihočeský kraj','Plzeňský kraj','Karlovarský kraj','Ústecký kraj','Liberecký kraj','Královéhradecký kraj','Pardubický kraj','Kraj Vysočina','Jihomoravský kraj','Olomoucký kraj','Zlínský kraj','Moravskoslezský kraj']).required(),
         });
         const allGpsCoordinates = await kindergartenService.getAllGpsCoordinates(result);
         ctx.body = {
