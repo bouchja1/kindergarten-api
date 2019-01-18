@@ -1,4 +1,5 @@
 'use strict';
+const _ = require('lodash');
 
 const SimpleInjector = require('../../libs/simple-injector');
 
@@ -76,8 +77,69 @@ class KindergartenService {
         return regionsTerritoriesArray;
     }
 
+    async getAllSchoolsInRadius(requestData) {
+        const allCoordinatesByYear = await this._model.getAllGpsCoordinatesByYear(requestData);
+        const distancePromisesArray = [];
+        for (let i = 0; i < allCoordinatesByYear.length; i++) {
+            if (allCoordinatesByYear[i].latitude && allCoordinatesByYear[i].longitude) {
+                distancePromisesArray.push(this.distance(requestData.latitude, requestData.longitude, Number(allCoordinatesByYear[i].latitude), Number(allCoordinatesByYear[i].longitude), allCoordinatesByYear[i]));
+            }
+        }
+        let allPromiseRes = await Promise.all(distancePromisesArray)
+            .then((values) => {
+                return values;
+            });
+        allPromiseRes = allPromiseRes.filter((data) => {
+            return Math.ceil(data.distance) <= requestData.radius;
+        });
+        allPromiseRes = _.orderBy(allPromiseRes, ['distance'], ['asc']);
+        return allPromiseRes;
+    }
+
+    /**
+     * This routine calculates the distance between two points (given the latitude/longitude of those points)
+     * South latitudes are negative, east longitudes are positive.
+     * Passed to function:
+     *  lat1, lon1 = Latitude and Longitude of point 1 (in decimal degrees)
+     *  lat2, lon2 = Latitude and Longitude of point 2 (in decimal degrees)
+     * Result is in kilometers
+     *
+     * @param lat1
+     * @param lon1
+     * @param lat2
+     * @param lon2
+     * @param unit
+     * @returns {Promise<object>}
+     */
+    async distance(lat1, lon1, lat2, lon2, originalData) {
+        let distance;
+        if ((lat1 == lat2) && (lon1 == lon2)) {
+            distance = 0;
+        }
+        else {
+            const radlat1 = Math.PI * lat1 / 180;
+            const radlat2 = Math.PI * lat2 / 180;
+            const theta = lon1 - lon2;
+            const radtheta = Math.PI * theta / 180;
+            let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+            if (dist > 1) {
+                dist = 1;
+            }
+            dist = Math.acos(dist);
+            dist = dist * 180 / Math.PI;
+            dist = dist * 60 * 1.1515;
+            dist = dist * 1.609344; // convert to kilometers
+            distance = dist;
+        }
+        originalData = {
+            ...originalData,
+            distance,
+        };
+        return originalData;
+    }
+
     async getAllGpsCoordinates(requestData) {
-        return this._model.getAllGpsCoordinates(requestData.year, requestData.vusc, requestData.nvusc);
+        return this._model.getAllGpsCoordinatesByYearAndRegion(requestData.year, requestData.vusc, requestData.nvusc);
     }
 
     async getAllKindergartens() {

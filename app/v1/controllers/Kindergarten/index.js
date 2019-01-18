@@ -15,6 +15,22 @@ class Kindergartens {
         await next();
     }
 
+    static async getAllPointsInRadius(ctx, next) {
+        const result = validator.run(ctx, validator.QUERY, {
+            kindergartenId: validator.number().optional(),
+            latitude: validator.number().required(),
+            longitude: validator.number().required(),
+            radius: validator.number().required(),
+            year: validator.number().default(2017),
+        });
+        console.log("REES: ", result)
+        const allSchoolsInRadius = await kindergartenService.getAllSchoolsInRadius(result);
+        ctx.body = {
+            schools: allSchoolsInRadius,
+        };
+        await next();
+    }
+
     static async getAllGpsCoordinates(ctx, next) {
         const result = validator.run(ctx, validator.QUERY, {
             year: validator.number().default(2017),

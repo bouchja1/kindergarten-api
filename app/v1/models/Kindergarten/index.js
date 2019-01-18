@@ -35,7 +35,30 @@ class KindergartenModel {
         )
     }
 
-    async getAllGpsCoordinates(year, vusc, nvusc) {
+    async getAllGpsCoordinatesByYear(requestData) {
+        let sqlQuery = `
+            SELECT id, nvusc, red_nazev,  red_ulice, red_misto, red_psc, latitude, longitude
+            FROM kindergarten
+            WHERE year = $year 
+            `;
+        let bindObject = {
+            year: requestData.year,
+        };
+        if (requestData.hasOwnProperty('kindergartenId')) {
+            sqlQuery = sqlQuery + ' AND id != $id';
+            bindObject = {
+                ...bindObject,
+                id: requestData.kindergartenId,
+            }
+        }
+        return this._db.query(sqlQuery, {
+                type: sequelize.QueryTypes.SELECT,
+                bind: bindObject,
+            }
+        )
+    }
+
+    async getAllGpsCoordinatesByYearAndRegion(year, vusc, nvusc) {
         return this._db.query(
             `
             SELECT id, latitude, longitude
