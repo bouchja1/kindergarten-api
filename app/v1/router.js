@@ -16,6 +16,7 @@ basicRouter
     .get('/regions', Kindergarten.getAllRegions, render)
     .get('/coordinates', Kindergarten.getAllGpsCoordinates, render)
     .get('/kindergartens', Kindergarten.getAllKindergartens, render)
-    .get('/kindergartens/:kindergartenId', Kindergarten.getKindergartenDetail, render);
+    .get('/kindergartens/:kindergartenId', Kindergarten.getKindergartenDetail, render)
+    .get('/kindergartens/:kindergartenId/counts', Kindergarten.getKindergartenCounts, render);
 
 module.exports = basicRouter;

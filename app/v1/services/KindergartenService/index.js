@@ -150,6 +150,10 @@ class KindergartenService {
         return this._model.getKindergartenById(id);
     }
 
+    async getKindergartenAnnualCounts(kindergartenId) {
+        return this._model.getKindergartenAnnualCounts(kindergartenId);
+    }
+
 }
 
 module.exports = KindergartenService;

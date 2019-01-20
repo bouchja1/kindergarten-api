@@ -17,6 +17,22 @@ class KindergartenModel {
         return this._kindergartenSchema.findById(id);
     }
 
+    async getKindergartenAnnualCounts(kindergartenId) {
+        return this._db.query(
+            `
+        SELECT id, year, children_zz, children_indiv_integr, children_total_attendance, children_total_capacity, children_special_class, children_normal_class
+        FROM kindergarten
+        WHERE red_izo = (SELECT red_izo FROM kindergarten WHERE id = $kindergartenId)
+        AND izo = (SELECT izo FROM kindergarten WHERE id = $kindergartenId)
+            `, {
+                type: sequelize.QueryTypes.SELECT,
+                bind: {
+                    kindergartenId
+                },
+            }
+        )
+    }
+
     async getAllKindergartens() {
         return await this._kindergartenSchema.findAll();
     }

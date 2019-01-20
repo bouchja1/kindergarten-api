@@ -61,6 +61,17 @@ class Kindergartens {
         await next();
     }
 
+    static async getKindergartenCounts(ctx, next) {
+        const result = validator.run(ctx, validator.PATH, {
+            kindergartenId: validator.number().required()
+        });
+        const kindergartenCounts = await kindergartenService.getKindergartenAnnualCounts(result.kindergartenId);
+        ctx.body = {
+            counts: kindergartenCounts,
+        };
+        await next();
+    }
+
 }
 
 module.exports = Kindergartens;
