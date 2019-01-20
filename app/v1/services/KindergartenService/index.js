@@ -150,11 +150,11 @@ class KindergartenService {
     }
 
     async getKindergartenAnnualCounts(kindergartenId, radius) {
-        const selectedKindergartenCounts = await this._model.getKindergartenAnnualCounts(kindergartenId);
+        const selectedKindergartenCounts = await this._model.getAllAnnualKindergartenDetailDataById(kindergartenId);
         const selectedKindergartenIds = selectedKindergartenCounts.map((annualSchoolCounts) => {
-           return annualSchoolCounts.id;
+            return annualSchoolCounts.id;
         });
-        const { latitude, longitude } = selectedKindergartenCounts[0];
+        const {latitude, longitude} = selectedKindergartenCounts[0];
         const allNearbyCoordinates = await this.getAllGpsCoordinates({
             kindergartenIds: selectedKindergartenIds,
         });
@@ -166,25 +166,7 @@ class KindergartenService {
     }
 
     _getCountsForKindergarten(selectedKindergartenCounts) {
-        let kindergartenResponseObject = {
-            red_izo: selectedKindergartenCounts[0].red_izo,
-            izo: selectedKindergartenCounts[0].izo,
-            nvusc: selectedKindergartenCounts[0].nvusc,
-            red_nazev: selectedKindergartenCounts[0].red_nazev,
-            red_ulice: selectedKindergartenCounts[0].red_ulice,
-            red_misto: selectedKindergartenCounts[0].red_misto,
-            red_psc: selectedKindergartenCounts[0].red_psc,
-            latitude: selectedKindergartenCounts[0].latitude,
-            longitude: selectedKindergartenCounts[0].longitude,
-            counts: selectedKindergartenCounts.map((schoolAnnualCounts) => {
-                return {
-                    year: schoolAnnualCounts.year,
-                    avg_count: schoolAnnualCounts.avg_count,
-                    children_total_attendance: schoolAnnualCounts.children_total_attendance,
-                    children_total_capacity: schoolAnnualCounts.children_total_capacity,
-                }
-            })
-        };
+        let kindergartenResponseObject = this._getResponseObjectForGraph(selectedKindergartenCounts);
         return kindergartenResponseObject;
     }
 
@@ -202,17 +184,24 @@ class KindergartenService {
             }
         }
         for (let [key, value] of schoolsMap.entries()) {
-            let schoolObject = {
-                red_izo: value[0].red_izo,
-                izo: value[0].izo,
-                nvusc: value[0].nvusc,
-                red_nazev: value[0].red_nazev,
-                red_ulice: value[0].red_ulice,
-                red_misto: value[0].red_misto,
-                red_psc: value[0].red_psc,
-                latitude: value[0].latitude,
-                longitude: value[0].longitude,
-                counts: value.map((schoolAnnualCounts) => {
+            let schoolObject = this._getResponseObjectForGraph(value);
+            radiusSchoolsArray.push(schoolObject);
+        }
+        return radiusSchoolsArray;
+    }
+
+    _getResponseObjectForGraph(kindergartenValues) {
+        return {
+            red_izo: kindergartenValues[0].red_izo,
+            izo: kindergartenValues[0].izo,
+            nvusc: kindergartenValues[0].nvusc,
+            red_nazev: kindergartenValues[0].red_nazev,
+            red_ulice: kindergartenValues[0].red_ulice,
+            red_misto: kindergartenValues[0].red_misto,
+            red_psc: kindergartenValues[0].red_psc,
+            latitude: kindergartenValues[0].latitude,
+            longitude: kindergartenValues[0].longitude,
+            counts: kindergartenValues.map((schoolAnnualCounts) => {
                 return {
                     year: schoolAnnualCounts.year,
                     avg_count: schoolAnnualCounts.avg_count,
@@ -220,10 +209,7 @@ class KindergartenService {
                     children_total_capacity: schoolAnnualCounts.children_total_capacity,
                 }
             })
-            };
-            radiusSchoolsArray.push(schoolObject);
         }
-        return radiusSchoolsArray;
     }
 
     async getAllGpsCoordinates(requestData) {

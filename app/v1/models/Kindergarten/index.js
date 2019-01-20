@@ -17,7 +17,7 @@ class KindergartenModel {
         return this._kindergartenSchema.findById(id);
     }
 
-    async getKindergartenAnnualCounts(kindergartenId) {
+    async getAllAnnualKindergartenDetailDataById(kindergartenId) {
         return this._db.query(
             `
         SELECT id, year, red_izo, izo, ruian_code, nvusc, red_nazev,  red_ulice, red_misto, red_psc, ((children_total_attendance/children_total_capacity) * 100) AS avg_count, children_total_attendance, children_total_capacity, latitude, longitude
