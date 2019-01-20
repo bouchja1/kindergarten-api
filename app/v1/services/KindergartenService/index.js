@@ -77,12 +77,11 @@ class KindergartenService {
         return regionsTerritoriesArray;
     }
 
-    async getAllSchoolsInRadius(requestData) {
-        const allCoordinatesByYear = await this._model.getAllGpsCoordinatesByYear(requestData);
+    async getAllSchoolsInRadius(allCoordinates, origLatitude, origLongitude, radius) {
         const distancePromisesArray = [];
-        for (let i = 0; i < allCoordinatesByYear.length; i++) {
-            if (allCoordinatesByYear[i].latitude && allCoordinatesByYear[i].longitude) {
-                distancePromisesArray.push(this.distance(requestData.latitude, requestData.longitude, Number(allCoordinatesByYear[i].latitude), Number(allCoordinatesByYear[i].longitude), allCoordinatesByYear[i]));
+        for (let i = 0; i < allCoordinates.length; i++) {
+            if (allCoordinates[i].latitude && allCoordinates[i].longitude) {
+                distancePromisesArray.push(this.distance(origLatitude, origLongitude, Number(allCoordinates[i].latitude), Number(allCoordinates[i].longitude), allCoordinates[i]));
             }
         }
         let allPromiseRes = await Promise.all(distancePromisesArray)
@@ -90,7 +89,7 @@ class KindergartenService {
                 return values;
             });
         allPromiseRes = allPromiseRes.filter((data) => {
-            return Math.ceil(data.distance) <= requestData.radius;
+            return Math.ceil(data.distance) <= radius;
         });
         allPromiseRes = _.orderBy(allPromiseRes, ['distance'], ['asc']);
         return allPromiseRes;
@@ -138,7 +137,7 @@ class KindergartenService {
         return originalData;
     }
 
-    async getAllGpsCoordinates(requestData) {
+    async getAllGpsCoordinatesByYearAndRegion(requestData) {
         return this._model.getAllGpsCoordinatesByYearAndRegion(requestData.year, requestData.vusc, requestData.nvusc);
     }
 
@@ -150,8 +149,47 @@ class KindergartenService {
         return this._model.getKindergartenById(id);
     }
 
-    async getKindergartenAnnualCounts(kindergartenId) {
-        return this._model.getKindergartenAnnualCounts(kindergartenId);
+    async getKindergartenAnnualCounts(kindergartenId, radius) {
+        const selectedKindergartenCounts = await this._model.getKindergartenAnnualCounts(kindergartenId);
+        const selectedKindergartenIds = selectedKindergartenCounts.map((annualSchoolCounts) => {
+           return annualSchoolCounts.id;
+        });
+        const { latitude, longitude } = selectedKindergartenCounts[0];
+        const allNearbyCoordinates = await this.getAllGpsCoordinates({
+            kindergartenIds: selectedKindergartenIds,
+        });
+        const allSchoolsInRadius = await this.getAllSchoolsInRadius(allNearbyCoordinates, latitude, longitude, radius);
+        return {
+            dataKindergarten: selectedKindergartenCounts,
+            dataRadius: this._getUniqueDataInRadius(allSchoolsInRadius)
+        }
+    }
+
+    _getUniqueDataInRadius(allSchoolsInRadius) {
+        // red_izo, izo, ruian_code,
+        const schoolsMap = new Map();
+        const radiusSchoolsArray = [];
+        for (let i = 0; i < allSchoolsInRadius.length; i++) {
+            let key = allSchoolsInRadius[i].red_izo + allSchoolsInRadius[i].izo + allSchoolsInRadius[i].latitude + allSchoolsInRadius[i].longitude;
+            let existingSchoolArray = schoolsMap.get(key);
+            if (existingSchoolArray) {
+                existingSchoolArray.push(allSchoolsInRadius[i]);
+            } else {
+                schoolsMap.set(key, [allSchoolsInRadius[i]]);
+            }
+        }
+        for (let [key, value] of schoolsMap.entries()) {
+            let schoolObject = {
+                school_hash: key,
+                counts: value,
+            };
+            radiusSchoolsArray.push(schoolObject);
+        }
+        return radiusSchoolsArray;
+    }
+
+    async getAllGpsCoordinates(requestData) {
+        return await this._model.getAllGpsCoordinates(requestData);
     }
 
 }

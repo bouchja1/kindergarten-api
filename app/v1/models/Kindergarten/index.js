@@ -20,7 +20,7 @@ class KindergartenModel {
     async getKindergartenAnnualCounts(kindergartenId) {
         return this._db.query(
             `
-        SELECT id, year, children_zz, children_indiv_integr, children_total_attendance, children_total_capacity, children_special_class, children_normal_class
+        SELECT id, year, red_izo, izo, ruian_code, nvusc, red_nazev,  red_ulice, red_misto, red_psc, ((children_total_attendance/children_total_capacity) * 100) AS avg_count, children_total_attendance, children_total_capacity, latitude, longitude
         FROM kindergarten
         WHERE red_izo = (SELECT red_izo FROM kindergarten WHERE id = $kindergartenId)
         AND izo = (SELECT izo FROM kindergarten WHERE id = $kindergartenId)
@@ -51,27 +51,30 @@ class KindergartenModel {
         )
     }
 
-    async getAllGpsCoordinatesByYear(requestData) {
+    async getAllGpsCoordinates(requestData) {
+        let bindObject = {};
         let sqlQuery = `
-            SELECT id, nvusc, red_nazev,  red_ulice, red_misto, red_psc, latitude, longitude
+            SELECT id, year, red_izo, izo, ruian_code, nvusc, red_nazev, red_ulice, red_misto, red_psc, latitude, longitude, ((children_total_attendance/children_total_capacity) * 100) AS avg_count, children_total_attendance, children_total_capacity
             FROM kindergarten
-            WHERE year = $year 
+            WHERE true
             `;
-        let bindObject = {
-            year: requestData.year,
-        };
-        if (requestData.hasOwnProperty('kindergartenId')) {
-            sqlQuery = sqlQuery + ' AND id != $id';
+        if (requestData.hasOwnProperty('year')) {
+            sqlQuery = sqlQuery + ' AND year = $year';
             bindObject = {
                 ...bindObject,
-                id: requestData.kindergartenId,
-            }
+                year: requestData.year,
+            };
         }
-        return this._db.query(sqlQuery, {
+        if (requestData.hasOwnProperty('kindergartenIds')) {
+            sqlQuery = sqlQuery + ` AND id NOT IN (${requestData.kindergartenIds})`;
+        }
+        const result = await this._db.query(sqlQuery, {
                 type: sequelize.QueryTypes.SELECT,
                 bind: bindObject,
-            }
+            },
         )
+        //console.log("REES: ", result)
+        return result;
     }
 
     async getAllGpsCoordinatesByYearAndRegion(year, vusc, nvusc) {

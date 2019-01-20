@@ -23,8 +23,11 @@ class Kindergartens {
             radius: validator.number().required(),
             year: validator.number().default(2017),
         });
-        console.log("REES: ", result)
-        const allSchoolsInRadius = await kindergartenService.getAllSchoolsInRadius(result);
+        const allCoordinatesByYear = await kindergartenService.getAllGpsCoordinates({
+            year: result.year,
+            kindergartenIds: result.kindergartenId ? [result.kindergartenId] : [],
+        });
+        const allSchoolsInRadius = await kindergartenService.getAllSchoolsInRadius(allCoordinatesByYear, result.latitude, result.longitude, result.radius);
         ctx.body = {
             schools: allSchoolsInRadius,
         };
@@ -37,7 +40,7 @@ class Kindergartens {
             vusc: validator.string().required(),
             nvusc: validator.string().valid(['Hl. m. Praha','Středočeský kraj','Jihočeský kraj','Plzeňský kraj','Karlovarský kraj','Ústecký kraj','Liberecký kraj','Královéhradecký kraj','Pardubický kraj','Kraj Vysočina','Jihomoravský kraj','Olomoucký kraj','Zlínský kraj','Moravskoslezský kraj']).required(),
         });
-        const allGpsCoordinates = await kindergartenService.getAllGpsCoordinates(result);
+        const allGpsCoordinates = await kindergartenService.getAllGpsCoordinatesByYearAndRegion(result);
         ctx.body = {
             coordinates: allGpsCoordinates,
         };
@@ -63,11 +66,13 @@ class Kindergartens {
 
     static async getKindergartenCounts(ctx, next) {
         const result = validator.run(ctx, validator.PATH, {
-            kindergartenId: validator.number().required()
+            kindergartenId: validator.number().required(),
+            radius: validator.number().default(1),
         });
-        const kindergartenCounts = await kindergartenService.getKindergartenAnnualCounts(result.kindergartenId);
+        const kindergartenCounts = await kindergartenService.getKindergartenAnnualCounts(result.kindergartenId, result.radius);
         ctx.body = {
-            counts: kindergartenCounts,
+            dataKindergarten: kindergartenCounts.dataKindergarten,
+            dataRadius: kindergartenCounts.dataRadius,
         };
         await next();
     }
