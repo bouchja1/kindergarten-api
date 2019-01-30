@@ -54,7 +54,7 @@ class KindergartenModel {
     async getAllGpsCoordinates(requestData) {
         let bindObject = {};
         let sqlQuery = `
-            SELECT id, year, red_izo, izo, ruian_code, nvusc, red_nazev, red_ulice, red_misto, red_psc, latitude, longitude, ((children_total_attendance/children_total_capacity) * 100) AS avg_count, children_total_attendance, children_total_capacity
+            SELECT id, year, red_izo, izo, ruian_code, nvusc, red_pln, red_nazev, red_ulice, red_misto, red_psc, latitude, longitude, ((children_total_attendance/children_total_capacity) * 100) AS avg_count, children_total_attendance, children_total_capacity
             FROM kindergarten
             WHERE true
             `;
