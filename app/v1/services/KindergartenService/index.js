@@ -195,6 +195,7 @@ class KindergartenService {
             red_izo: kindergartenValues[0].red_izo,
             izo: kindergartenValues[0].izo,
             nvusc: kindergartenValues[0].nvusc,
+            red_pln: kindergartenValues[0].red_pln,
             red_nazev: kindergartenValues[0].red_nazev,
             red_ulice: kindergartenValues[0].red_ulice,
             red_misto: kindergartenValues[0].red_misto,
