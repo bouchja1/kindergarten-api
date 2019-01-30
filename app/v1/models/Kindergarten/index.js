@@ -20,7 +20,7 @@ class KindergartenModel {
     async getAllAnnualKindergartenDetailDataById(kindergartenId) {
         return this._db.query(
             `
-        SELECT id, year, red_izo, izo, ruian_code, nvusc, red_nazev,  red_ulice, red_misto, red_psc, ((children_total_attendance/children_total_capacity) * 100) AS avg_count, children_total_attendance, children_total_capacity, latitude, longitude
+        SELECT id, year, red_izo, izo, ruian_code, nvusc, red_nazev, red_pln, red_ulice, red_misto, red_psc, ((children_total_attendance/children_total_capacity) * 100) AS avg_count, children_total_attendance, children_total_capacity, latitude, longitude
         FROM kindergarten
         WHERE red_izo = (SELECT red_izo FROM kindergarten WHERE id = $kindergartenId)
         AND izo = (SELECT izo FROM kindergarten WHERE id = $kindergartenId)
