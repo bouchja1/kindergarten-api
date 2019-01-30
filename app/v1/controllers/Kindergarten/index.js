@@ -65,10 +65,11 @@ class Kindergartens {
     }
 
     static async getKindergartenCounts(ctx, next) {
-        const result = validator.run(ctx, validator.PATH, {
+        const result = validator.run(ctx, [validator.PATH, validator.QUERY], {
             kindergartenId: validator.number().required(),
-            radius: validator.number().default(1),
+            radius: validator.number().default(3),
         });
+        console.log("REES: ", result)
         const kindergartenCounts = await kindergartenService.getKindergartenAnnualCounts(result.kindergartenId, result.radius);
         ctx.body = {
             dataKindergarten: kindergartenCounts.dataKindergarten,
